@@ -1,3 +1,4 @@
+from turtle import shape, width
 import cv2
 import os
 import matplotlib.pyplot as plt
@@ -12,8 +13,8 @@ warnings.filterwarnings("ignore")
 from scipy.optimize import differential_evolution
 
 def remove_noise(img):
-    kernel1 = np.ones((30, 30), np.uint8)
-    kernel2 = np.ones((50,50),np.uint8)
+    kernel1 = np.ones((3, 3), np.uint8)
+    kernel2 = np.ones((4, 4),np.uint8)
     iterations = 1
     img1 = img.copy()
     img1 = cv2.erode(img1, kernel1, iterations)
@@ -21,90 +22,62 @@ def remove_noise(img):
     
     return img1
 
-def find_the_centre(mask):
-
-    x, y = np.where(mask == 255)
-    n = len(x)
-    if n == 0:
-        n = 1
-    x_final = int(sum(x) / n)
-    y_final = int(sum(y) / n)
-    
-    return x_final, y_final
-
-
-""""
-def binarizacija(frame):
-    treshold1 = 151
-    treshold2 = 99
-    width = frame.shape[0] 
-    hight = frame.shape[1]
-    for i in range (width): 
-        for j in range(hight): 
-            if frame[i,j] >= treshold1 and frame[i,j] <= treshold2: 
-                bin[i, j] = 0 
-            else: bin [i, j] = 0
-    return bin
-"""
 
 
 def frame_work(frame):
                
-    #rotiranje,
-    #binaroizacija na osnovu narandzaste boje
-    #i nalazenje centra 
-    
-    #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    #frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-    
-    #orange_hsv = [20, 200, 200]
-    
-    indikator = frame.copy()
-    indikator[:, :] = [0, 0, 255]
-    
-    treshold = 50
-
-
-    #mask = cv2.adaptiveThreshold(frame, treshold)
-    #mask = cv2.inRange(frame, (30, 100, 58), (30, 255, 255))  
-
     
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    mask = frame
-    #frame = cv2.GaussianBlur(frame,(5,5),0)
-    #frame = cv2.medianBlur(frame,5)
-    #ret, mask = cv2.threshold(frame,0,255,cv2.THRESH_BINARY)
+    mask = frame.copy()
+    mask = cv2.GaussianBlur(mask,(15,15),0)
+    blure = mask.copy()
 
-    ret,frame = cv2.threshold(frame,40,255,cv2.THRESH_BINARY)
-
-    frame = remove_noise(frame)
+    ret,mask= cv2.threshold(frame,70,255,cv2.THRESH_BINARY)#menjala
+    bin = mask.copy()
+    mask = remove_noise(mask)   
     
-    x, y = find_the_centre(frame)
-    
-    #frame[x-5 : x+5, y-5 : y+5, :] = [255, 0, 255]
-            
-    position = [x, y]    
-    
-    return frame, mask, position
-
-def fix_pos(pos, frame):
-    x = pos[1]
-    y = frame.shape[0] - pos[0]
-    return x, y
+    return frame, mask, bin, blure
 
 
 kamera = 1
 cap = cv2.VideoCapture(kamera)
 set_color = True
 
+#width, height, t = frame.shape
+
 while cap.isOpened():
     
     ret, frame = cap.read()
+    rgb = frame.copy()
+
     
-    frame, mask, position = frame_work(frame)
+    frame, mask,  bin, blure = frame_work(frame)
+    # erozija i dilatacije 
+
+    edges = cv2.Canny(mask, 120, 160) # 75, 150
     
-    cv2.imshow('Webcam', frame)
-    cv2.imshow('Filtrirano', mask)
+    rows = frame.shape[0]
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows, param1=150, param2=12, minRadius=50, maxRadius=100)
+    
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+        for i in circles[0, :]:
+            center = (i[0], i[1])
+            # circle center
+            cv2.circle(rgb, center, 1, (255, 0, 0), 10)
+            cv2.circle(edges, center, 1, (255, 0, 0), 10)
+
+            # circle outline
+            radius = i[2]
+            cv2.circle(rgb, center, radius, (255, 0, 0), 10)
+            cv2.circle(edges, center, radius, (255, 0, 0), 10)
+    
+    cv2.imshow("Detected circles", mask)
+    cv2.imshow('Siva', frame)
+    cv2.imshow('RGB+circle', rgb)
+    cv2.imshow('Binarizovano', bin)
+    cv2.imshow('Keni', edges)
+    cv2.imshow('Mutna', blure)
     
    # cv2.imshow('Nadjena boja', indikator)
     
