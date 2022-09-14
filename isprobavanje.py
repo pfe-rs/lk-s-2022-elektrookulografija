@@ -1,6 +1,7 @@
 # import pygame module in this program
 import pygame
 import time
+import math
  
 # activate the pygame library
 # initiate pygame and give permission
@@ -10,92 +11,156 @@ pygame.init()
 # define the RGB value for white,
 #  green, blue colour .
 white = (255, 255, 255)
+black = (0, 0, 0)
+red = (200, 0 , 0)
 green = (0, 255, 0)
 blue = (0, 0, 128)
  
 # assigning values to X and Y variable
-X = 1400
-Y = 800
+window_width = 1400
+window_hieght = 800
  
 # create the display surface object
 # of specific dimension..e(X, Y).
-display_surface = pygame.display.set_mode((X, Y))
+ww = pygame.display.set_mode((window_width, window_hieght))
  
 # set the pygame window name
-pygame.display.set_caption('Show Text')
- 
-# create a font object.
-# 1st parameter is the font file
-# which is present in pygame.
-# 2nd parameter is size of the font
-font = pygame.font.Font('freesansbold.ttf', 32)
- 
-# create a text surface object,
-# on which text is drawn on it.
-text2 = font.render("Pogledaj u tacku 1", True, green, blue) 
-text3 = font.render('Pogledaj u tacku 2', True, green, blue)
-text4 = font.render("Pogledaj u tacku 3", True, green, blue) 
-text5 = font.render('Pogledaj u tacku 4', True, green, blue)
+pygame.display.set_caption('Gledaj u tacku koja se cveni')
 
-tacka1 = font.render('1', True, green,blue)
-tacka2 = font.render('2', True, green,blue)
-tacka3 = font.render('3', True, green,blue)
-tacka4 = font.render('4', True, green,blue)
-# create a rectangular object for the
-# text surface object
-textRect2 = text2.get_rect()
-textRect3 = text3.get_rect()
-textRect4 = text4.get_rect()
-textRect5 = text5.get_rect()
+#krugovi, tacke
+x1 = 40; y1 = 40; radius = 20
+x2 = window_width//2; y2 = 40; radius = 20
+x3 = window_width-40; y3 = 40; radius = 20
+x4 = 40; y4 = window_hieght//2; radius = 20
+x5 = window_width//2; y5 = window_hieght//2; radius = 20
+x6 = window_width-40; y6 = window_hieght//2; radius = 20
+x7 = 40; y7 = window_hieght-40; radius = 20
+x8 = window_width//2; y8 = window_hieght-40; radius = 20
+x9 = window_width-40; y9 = window_hieght-40; radius = 20
 
-textTacka1 = tacka1.get_rect()
-textTacka2 = tacka2.get_rect()
-textTacka3 = tacka3.get_rect()
-textTacka4 = tacka4.get_rect()
-# set the center of the rectangular object.
-textRect2.center = (X // 2, Y // 2)
-textRect3.center = (X // 2, Y // 2)
-textRect4.center = (X // 2, Y // 2)
-textRect5.center = (X // 2, Y // 2)
-
-textTacka1.center = (35, Y // 2)
-textTacka2.center = (X // 2, 35)
-textTacka3.center = (X // 2, Y - 35)
-textTacka4.center = (X - 35, Y // 2)
-
-t = 5000
 # infinite loop
-clock = pygame.time.Clock 
-while True:
- 
-    display_surface.fill((255, 255, 255))
-    display_surface.blit(text1, textRect1)
+clock = pygame.time.Clock() 
+state = True
 
-    start = time.time()
-    while (1):
-        end = time.time()
-        display_surface.fill((255, 255, 255))
-        display_surface.blit(text1, textRect1)
-        timeDiff = end - start
+start_time = pygame.time.get_ticks()
+end_time = 0
 
-        if(timeDiff > 5):
-            
-            break
-    display_surface.blit(text2, textRect2)
-    display_surface.blit(text, textCircle)
-
+while state:
     for event in pygame.event.get():
- 
-        # if event object type is QUIT
-        # then quitting the pygame
-        # and program both.
         if event.type == pygame.QUIT:
- 
-            # deactivates the pygame library
-            pygame.quit()
- 
-            # quit the program.
-            quit()
- 
-        # Draws the surface object to the screen.
-        pygame.display.update()
+            state = False
+
+    pygame.display.update()
+    clock.tick(30)
+    
+    ww.fill(white)
+
+    end_time =  pygame.time.get_ticks()
+
+    if(end_time - start_time<5000):
+        pygame.draw.circle(ww, red, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 5000 and end_time - start_time < 10000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, red, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 10000 and end_time - start_time < 15000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, red, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 15000 and end_time - start_time < 20000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, red, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 20000 and end_time - start_time < 25000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, red, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 25000 and end_time - start_time < 30000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, red, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 30000 and end_time - start_time < 35000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, red, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 35000 and end_time - start_time < 40000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, red, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 40000 and end_time - start_time < 45000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, red, (x9,y9), radius)
+    
+    else: state = False
+
+    pygame.display.update()
+    clock.tick(30)
+
+
+pygame.quit()
+quit()
