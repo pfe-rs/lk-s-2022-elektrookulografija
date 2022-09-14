@@ -5,4 +5,4 @@ fp = open('podaci.txt', 'w')
 fp.write('x1,y1\n')
 for i in range(len(x1)):
     fp.write(f'{x1[i]},{y1[i]}\n')
-
+fp.close()

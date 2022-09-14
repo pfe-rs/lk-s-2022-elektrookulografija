@@ -1,21 +1,14 @@
-from turtle import shape, width
 import cv2
-import os
 import matplotlib.pyplot as plt
 import numpy as np
-
-import serial
-import time
-
-import control
 import warnings
 warnings.filterwarnings("ignore")
 from scipy.optimize import differential_evolution
 
 def remove_noise(img):
 
-    kernel1 = np.ones((10, 10), np.uint8)
-    kernel2 = np.ones((8, 8),np.uint8)
+    kernel1 = np.ones((25, 25), np.uint8)
+    kernel2 = np.ones((9, 9),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -34,17 +27,37 @@ def get_threshold(frame, p):
     return thr
 
 def frame_work(frame):
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    mask = frame.copy()
-    mask = cv2.GaussianBlur(mask,(21,21), 10)
-    blure = mask.copy()
-    thr = get_threshold(frame, 0.15)
-    print(thr)
-    ret,mask= cv2.threshold(frame,thr,255,cv2.THRESH_BINARY)#menjala
-    bin = mask.copy()
-    mask = remove_noise(mask)   
+    #crno-belo      
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #zamutiti
+    blure = cv2.GaussianBlur(gray,(25,25),150)
+    #binarizacija
+    thr = get_threshold(blure, 0.20)
+    ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
+    #dilatacija i erozija
+    #mask = remove_noise(bin)   
+    #keni
+    edges = cv2.Canny(bin, 120, 160) # 75, 150
+    #krugovi
+    rows = frame.shape[0]
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
     
-    return frame, mask, bin, blure
+    return frame,  bin, blure, edges, circles
+
+def koordinate(circles, frame):
+    center = (0, 0)
+    radius = 1
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+        for i in circles[0, :]:
+            center = (i[0], i[1])
+            # circle center
+            cv2.circle(frame, center, 1, (255, 0, 0), 10)
+
+            # circle outline
+            radius = i[2]
+            cv2.circle(frame, center, radius, (255, 0, 0), 10)
+    return center, radius
 
 
 kamera = 1
@@ -59,13 +72,8 @@ while cap.isOpened():
     rgb = frame.copy()
 
     
-    frame, mask,  bin, blure = frame_work(frame)
+    frame,  bin, blure, edges, circles = frame_work(frame)
     # erozija i dilatacije 
-
-    edges = cv2.Canny(mask, 120, 160) # 75, 150
-    
-    rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows * 3, param1=150, param2=12, minRadius=50, maxRadius=100)
     
     if circles is not None:
         circles = np.uint16(np.around(circles))
@@ -80,7 +88,6 @@ while cap.isOpened():
             cv2.circle(rgb, center, radius, (255, 0, 0), 10)
             cv2.circle(edges, center, radius, (255, 0, 0), 10)
     
-    cv2.imshow("Detected circles", mask)
     cv2.imshow('Siva', frame)
     cv2.imshow('RGB+circle', rgb)
     cv2.imshow('Binarizovano', bin)
