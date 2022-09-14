@@ -5,14 +5,16 @@ import numpy as np
 import pygame 
 import serial
 import time
+import math
 
 import control
 from scipy.optimize import differential_evolution
 
+
 def remove_noise(img):
 
-    kernel1 = np.ones((9, 9), np.uint8)
-    kernel2 = np.ones((11, 11),np.uint8)
+    kernel1 = np.ones((10, 10), np.uint8)
+    kernel2 = np.ones((8, 8),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -22,15 +24,22 @@ def remove_noise(img):
     
     return img1
 
+def get_threshold(frame, p):
+    image_hist = np.histogram(frame.flatten(), 256)[0]
+    image_cum_hist = np.cumsum(image_hist)
+    image_cum_hist = image_cum_hist / image_cum_hist[-1]
+    image_cum_hist = (image_cum_hist > p).astype(int)
+    thr = np.argmax(np.diff(image_cum_hist))
+    return thr
 
 def frame_work(frame):
-
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
     blure = cv2.GaussianBlur(gray,(15,15),0)
     #binarizacija
-    ret,bin= cv2.threshold(blure,70,255,cv2.THRESH_BINARY)
+    thr = get_threshold(blure, 0.2)
+    ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     mask = remove_noise(bin)   
     #keni
@@ -39,7 +48,7 @@ def frame_work(frame):
     rows = frame.shape[0]
     circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows, param1=150, param2=12, minRadius=50, maxRadius=100)
     
-    return circles
+    return circles, bin, edges
 
 def koordinate(circles, frame):
     center = (0, 0)
@@ -64,6 +73,12 @@ xosa = []
 yosa = []
 rskup = []
 
+xosa_filter = []
+yosa_filter = []
+rskup_filter = []
+
+n = 10
+i = 0
 
 start_veca = time.time()
 print("Pocinjemo") 
@@ -71,11 +86,29 @@ while True:
     start = time.time()
     while (1):
         flag, frame = cap.read()
-        circles = frame_work(frame)
+        circles, bin, edges = frame_work(frame)
         eyePozit, r =  koordinate(circles, frame)
+        cv2.imshow('Siva', frame)
+        cv2.imshow('Binarizovano', bin)
+        cv2.imshow('Keni', edges)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
         xosa.append(eyePozit[0])
         yosa.append(eyePozit[1])
         rskup.append(r)
+
+        
+        if(i<n):
+            xosa_filter.append(np.mean(xosa[0:i]))
+            yosa_filter.append(np.mean(yosa[0:i]))
+            rskup_filter.append(np.mean(rskup[0:i]))
+        else:
+            xosa_filter.append(np.mean(xosa[i-n:i]))
+            yosa_filter.append(np.mean(yosa[i-n:i]))
+            rskup_filter.append(np.mean(rskup[i-n:i]))
+
+        i = i + 1
         end = time.time()
         timeDiff = end - start
 
@@ -88,6 +121,7 @@ while True:
     if(timeDiff_veca > 20):
         break
 
+
 #print(xosa)
         
 cap.release()
@@ -96,18 +130,21 @@ cv2.destroyAllWindows()
 t = np.linspace(0, 20, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
+plt.plot(t, xosa_filter)
 plt.xlabel('t - axis')
 plt.ylabel('x - axis')
 plt.show()
 
 plt.figure()
 plt.plot(t, yosa)
+plt.plot(t, yosa_filter)
 plt.xlabel('t - axis')
 plt.ylabel('y - axis')
 plt.show()
 
 plt.figure()
 plt.plot(t, rskup)
+plt.plot(t, rskup_filter)
 plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
