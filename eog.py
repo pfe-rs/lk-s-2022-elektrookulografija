@@ -13,26 +13,34 @@ warnings.filterwarnings("ignore")
 from scipy.optimize import differential_evolution
 
 def remove_noise(img):
-    kernel1 = np.ones((3, 3), np.uint8)
-    kernel2 = np.ones((4, 4),np.uint8)
+
+    kernel1 = np.ones((10, 10), np.uint8)
+    kernel2 = np.ones((8, 8),np.uint8)
+
     iterations = 1
     img1 = img.copy()
+
     img1 = cv2.erode(img1, kernel1, iterations)
     img1 = cv2.dilate(img1, kernel2, iterations)
     
     return img1
 
-
+def get_threshold(frame, p):
+    image_hist = np.histogram(frame.flatten(), 256)[0]
+    image_cum_hist = np.cumsum(image_hist)
+    image_cum_hist = image_cum_hist / image_cum_hist[-1]
+    image_cum_hist = (image_cum_hist > p).astype(int)
+    thr = np.argmax(np.diff(image_cum_hist))
+    return thr
 
 def frame_work(frame):
-               
-    
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     mask = frame.copy()
-    mask = cv2.GaussianBlur(mask,(15,15),0)
+    mask = cv2.GaussianBlur(mask,(21,21), 10)
     blure = mask.copy()
-
-    ret,mask= cv2.threshold(frame,70,255,cv2.THRESH_BINARY)#menjala
+    thr = get_threshold(frame, 0.15)
+    print(thr)
+    ret,mask= cv2.threshold(frame,thr,255,cv2.THRESH_BINARY)#menjala
     bin = mask.copy()
     mask = remove_noise(mask)   
     
@@ -57,7 +65,7 @@ while cap.isOpened():
     edges = cv2.Canny(mask, 120, 160) # 75, 150
     
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows, param1=150, param2=12, minRadius=50, maxRadius=100)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows * 3, param1=150, param2=12, minRadius=50, maxRadius=100)
     
     if circles is not None:
         circles = np.uint16(np.around(circles))
