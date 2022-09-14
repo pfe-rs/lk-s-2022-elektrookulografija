@@ -38,7 +38,7 @@ def frame_work(frame):
     #zamutiti
     blure = cv2.GaussianBlur(gray,(15,15),0)
     #binarizacija
-    thr = get_threshold(blure, 0.2)
+    thr = get_threshold(blure, 0.15)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     mask = remove_noise(bin)   
@@ -46,7 +46,7 @@ def frame_work(frame):
     edges = cv2.Canny(mask, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows, param1=150, param2=12, minRadius=50, maxRadius=100)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
     
     return circles, bin, edges
 
@@ -79,6 +79,7 @@ rskup_filter = []
 
 n = 10
 i = 0
+k = 0
 
 start_veca = time.time()
 print("Pocinjemo") 
@@ -105,20 +106,23 @@ while True:
             rskup_filter.append(np.mean(rskup[0:i]))
         else:
             xosa_filter.append(np.mean(xosa[i-n:i]))
-            yosa_filter.append(np.mean(yosa[i-n:i]))
             rskup_filter.append(np.mean(rskup[i-n:i]))
+            c = n + 5
+            yosa_filter.append(np.mean(yosa[i-c:i]))
 
         i = i + 1
         end = time.time()
         timeDiff = end - start
 
         if(timeDiff > 5):
-            print("Pogledaj u sledecu tacku")
+            print("Pogledaj u tacku")
+            print(k+1)
+            k = k + 1
             break
     end_veca = time.time()
     timeDiff_veca = end_veca - start_veca
 
-    if(timeDiff_veca > 20):
+    if(timeDiff_veca > 45):
         break
 
 
