@@ -38,6 +38,8 @@ x7 = 40; y7 = window_hieght-40; radius = 20
 x8 = window_width//2; y8 = window_hieght-40; radius = 20
 x9 = window_width-40; y9 = window_hieght-40; radius = 20
 
+
+
 # infinite loop
 clock = pygame.time.Clock() 
 state = True
@@ -57,7 +59,7 @@ while state:
 
     end_time =  pygame.time.get_ticks()
 
-    if(end_time - start_time<5000):
+    if(end_time - start_time<3000):
         pygame.draw.circle(ww, red, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -68,7 +70,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 5000 and end_time - start_time < 10000):
+    elif(end_time - start_time > 3000 and end_time - start_time < 6000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, red, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -79,7 +81,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 10000 and end_time - start_time < 15000):
+    elif(end_time - start_time > 6000 and end_time - start_time < 9000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, red, (x3,y3), radius)
@@ -90,7 +92,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 15000 and end_time - start_time < 20000):
+    elif(end_time - start_time > 9000 and end_time - start_time < 12000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -101,7 +103,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 20000 and end_time - start_time < 25000):
+    elif(end_time - start_time > 12000 and end_time - start_time < 15000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -112,7 +114,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 25000 and end_time - start_time < 30000):
+    elif(end_time - start_time > 15000 and end_time - start_time < 18000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -123,7 +125,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 30000 and end_time - start_time < 35000):
+    elif(end_time - start_time > 18000 and end_time - start_time < 21000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -134,7 +136,7 @@ while state:
         pygame.draw.circle(ww, white, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 35000 and end_time - start_time < 40000):
+    elif(end_time - start_time > 21000 and end_time - start_time < 24000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -145,7 +147,7 @@ while state:
         pygame.draw.circle(ww, red, (x8,y8), radius)
         pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    elif(end_time - start_time > 40000 and end_time - start_time < 45000):
+    elif(end_time - start_time > 24000 and end_time - start_time < 27000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)

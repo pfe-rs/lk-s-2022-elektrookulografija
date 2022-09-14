@@ -1,4 +1,4 @@
-from os import times_result
+from os import stat, times_result
 from turtle import width
 import cv2
 import matplotlib.pyplot as plt
@@ -6,12 +6,12 @@ import numpy as np
 import pygame 
 import serial
 import time
-
+import math
 
 def remove_noise(img):
 
-    kernel1 = np.ones((10, 10), np.uint8)
-    kernel2 = np.ones((8, 8),np.uint8)
+    kernel1 = np.ones((25, 25), np.uint8)
+    kernel2 = np.ones((9, 9),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -33,14 +33,14 @@ def frame_work(frame):
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
-    blure = cv2.GaussianBlur(gray,(15,15),0)
+    blure = cv2.GaussianBlur(gray,(25,25),150)
     #binarizacija
-    thr = get_threshold(blure, 0.15)
+    thr = get_threshold(blure, 0.20)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
-    mask = remove_noise(bin)   
+    #mask = remove_noise(bin)   
     #keni
-    edges = cv2.Canny(mask, 120, 160) # 75, 150
+    edges = cv2.Canny(bin, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
     circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
@@ -62,6 +62,28 @@ def koordinate(circles, frame):
             cv2.circle(frame, center, radius, (255, 0, 0), 10)
     return center, radius
 
+
+pygame.init()
+
+white = (255, 255, 255)
+red = (200, 0 , 0)
+
+window_width = 1400
+window_hieght = 800
+
+ww = pygame.display.set_mode((window_width, window_hieght))
+pygame.display.set_caption('Gledaj u tacku koja se cveni')
+
+x1 = 40; y1 = 40; radius = 20
+x2 = window_width//2; y2 = 40; radius = 20
+x3 = window_width-40; y3 = 40; radius = 20
+x4 = 40; y4 = window_hieght//2; radius = 20
+x5 = window_width//2; y5 = window_hieght//2; radius = 20
+x6 = window_width-40; y6 = window_hieght//2; radius = 20
+x7 = 40; y7 = window_hieght-40; radius = 20
+x8 = window_width//2; y8 = window_hieght-40; radius = 20
+x9 = window_width-40; y9 = window_hieght-40; radius = 20
+
 kamera = 1
 cap = cv2.VideoCapture(kamera)
 set_color = True
@@ -78,74 +100,181 @@ n = 10
 i = 0
 k = 0
 
-window_width = 1400
-window_height = 800
+clock = pygame.time.Clock() 
+state = True
 
-window = pygame.display.set_mode((window_width, window_height)) 
+start_time = pygame.time.get_ticks()
+end_time = 0
 
-start_veca = time.time()
-print("Pocinjemo") 
-while True:
-    start = time.time()
-    while (1):
-        flag, frame = cap.read()
-        circles, bin, edges = frame_work(frame)
-        eyePozit, r =  koordinate(circles, frame)
-        cv2.imshow('Siva', frame)
-        cv2.imshow('Binarizovano', bin)
-        cv2.imshow('Keni', edges)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+while state:
 
-        xosa.append(eyePozit[0])
-        yosa.append(eyePozit[1])
-        rskup.append(r)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            state = False
+
+    pygame.display.update()
+    clock.tick(30)
+    
+    ww.fill(white)
+
+    end_time =  pygame.time.get_ticks()
+
+    flag, frame = cap.read()
+    circles, bin, edges = frame_work(frame)
+    eyePozit, r =  koordinate(circles, frame)
+    '''cv2.imshow('Siva', frame)
+    cv2.imshow('Binarizovano', bin)
+    cv2.imshow('Keni', edges)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break'''
+
+    xosa.append(eyePozit[0])
+    yosa.append(eyePozit[1])
+    rskup.append(r)
 
         
-        if(i<n):
-            xosa_filter.append(np.mean(xosa[0:i]))
-            yosa_filter.append(np.mean(yosa[0:i]))
-            rskup_filter.append(np.mean(rskup[0:i]))
-        else:
-            xosa_filter.append(np.mean(xosa[i-n:i]))
-            rskup_filter.append(np.mean(rskup[i-n:i]))
-            c = n + 5
-            yosa_filter.append(np.mean(yosa[i-c:i]))
+    if(i<n):
+        xosa_filter.append(np.mean(xosa[0:i]))
+        yosa_filter.append(np.mean(yosa[0:i]))
+        rskup_filter.append(np.mean(rskup[0:i]))
+    else:
+        xosa_filter.append(np.mean(xosa[i-n:i]))
+        rskup_filter.append(np.mean(rskup[i-n:i]))
+        c = n + 5
+        yosa_filter.append(np.mean(yosa[i-c:i]))
 
-        i = i + 1
-        end = time.time()
-        timeDiff = end - start
+    i = i + 1
+    if(end_time - start_time<5000):
+        pygame.draw.circle(ww, red, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
 
-        if(timeDiff > 5):
-            print("Pogledaj u tacku")
-            print(k+1)
-            k = k + 1
-            break
-    end_veca = time.time()
-    timeDiff_veca = end_veca - start_veca
+    elif(end_time - start_time > 5000 and end_time - start_time < 10000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, red, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
 
-    if(timeDiff_veca > 45):
-        break
+    elif(end_time - start_time > 10000 and end_time - start_time < 15000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, red, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 9000 and end_time - start_time < 12000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, red, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 12000 and end_time - start_time < 15000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, red, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 15000 and end_time - start_time < 18000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, red, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 18000 and end_time - start_time < 21000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, red, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 21000 and end_time - start_time < 24000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, red, (x8,y8), radius)
+        pygame.draw.circle(ww, white, (x9,y9), radius)
+
+    elif(end_time - start_time > 24000 and end_time - start_time < 27000):
+        pygame.draw.circle(ww, white, (x1,y1), radius)
+        pygame.draw.circle(ww, white, (x2,y2), radius)
+        pygame.draw.circle(ww, white, (x3,y3), radius)
+        pygame.draw.circle(ww, white, (x4,y4), radius)
+        pygame.draw.circle(ww, white, (x5,y5), radius)
+        pygame.draw.circle(ww, white, (x6,y6), radius)
+        pygame.draw.circle(ww, white, (x7,y7), radius)
+        pygame.draw.circle(ww, white, (x8,y8), radius)
+        pygame.draw.circle(ww, red, (x9,y9), radius)
+    
+    else: state = False
+
+    pygame.display.update()
+    clock.tick(30)
+
 
         
 cap.release()
 cv2.destroyAllWindows()
 
-t = np.linspace(0, 20, len(xosa))
+t = np.linspace(0, 27, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
+plt.plot(t, xosa_filter)
 plt.xlabel('t - axis')
 plt.ylabel('x - axis')
 plt.show()
 
 plt.figure()
 plt.plot(t, yosa)
+plt.plot(t, yosa_filter)
 plt.xlabel('t - axis')
 plt.ylabel('y - axis')
 plt.show()
 
 plt.figure()
 plt.plot(t, rskup)
+plt.plot(t, rskup_filter)
 plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
+
+
+pygame.quit()
+quit()
