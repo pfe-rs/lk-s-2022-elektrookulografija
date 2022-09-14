@@ -68,8 +68,8 @@ pygame.init()
 white = (255, 255, 255)
 red = (200, 0 , 0)
 
-window_width = 1400
-window_hieght = 800
+window_width = 1000
+window_hieght = 500
 
 ww = pygame.display.set_mode((window_width, window_hieght))
 pygame.display.set_caption('Gledaj u tacku koja se cveni')
@@ -298,7 +298,7 @@ plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
 
-fp = open("C:\\Users\\EliteBook\\OneDrive\\Radna površina\\eogcode\\eog_podaci.txt", 'w')
+fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\eog_podaci.txt", 'w')
 fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
 
 minLen = min(len(xosa_filter), len(niz_x))
