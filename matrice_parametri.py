@@ -8,7 +8,7 @@ from numpy.linalg import inv
 
 
 podaci = []
-with open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\eog_podaci.txt", 'r') as f:
+with open("plot.txt", 'r') as f:
      next(f)
      for myline in f:
          arr = myline.split(',')
