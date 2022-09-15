@@ -135,7 +135,7 @@ while state:
     yosa.append(eyePozit[1])
     rskup.append(r)
 
-        
+    #milomir's filter  
     if(i<n):
         xosa_filter.append(np.mean(xosa[0:i]))
         yosa_filter.append(np.mean(yosa[0:i]))
@@ -276,7 +276,7 @@ while state:
 cap.release()
 cv2.destroyAllWindows()
 
-t = np.linspace(0, 27, len(xosa))
+t = np.linspace(0, 45, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
 plt.plot(t, xosa_filter)
@@ -297,6 +297,8 @@ plt.plot(t, rskup_filter)
 plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
+
+
 
 fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\eog_podaci.txt", 'w')
 fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
