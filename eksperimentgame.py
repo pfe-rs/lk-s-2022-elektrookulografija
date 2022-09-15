@@ -146,7 +146,7 @@ while state:
         c = n + 5
         yosa_filter.append(np.mean(yosa[i-c:i]))
 
-    if(end_time - start_time<5000):
+    if(end_time - start_time<7000):
         pygame.draw.circle(ww, red, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -159,7 +159,7 @@ while state:
         niz_x.append(x1)
         niz_y.append(y1)
 
-    elif(end_time - start_time > 5000 and end_time - start_time < 10000):
+    elif(end_time - start_time > 7000 and end_time - start_time < 14000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, red, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -172,7 +172,7 @@ while state:
         niz_x.append(x2)
         niz_y.append(y2)
 
-    elif(end_time - start_time > 10000 and end_time - start_time < 15000):
+    elif(end_time - start_time > 14000 and end_time - start_time < 21000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, red, (x3,y3), radius)
@@ -185,7 +185,7 @@ while state:
         niz_x.append(x3)
         niz_y.append(y3)
 
-    elif(end_time - start_time > 15000 and end_time - start_time < 20000):
+    elif(end_time - start_time > 21000 and end_time - start_time < 28000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -198,7 +198,7 @@ while state:
         niz_x.append(x4)
         niz_y.append(y4)
 
-    elif(end_time - start_time > 20000 and end_time - start_time < 25000):
+    elif(end_time - start_time > 28000 and end_time - start_time < 35000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -211,7 +211,7 @@ while state:
         niz_x.append(x5)
         niz_y.append(y5)
 
-    elif(end_time - start_time > 25000 and end_time - start_time < 30000):
+    elif(end_time - start_time > 35000 and end_time - start_time < 42000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -224,7 +224,7 @@ while state:
         niz_x.append(x6)
         niz_y.append(y6)
 
-    elif(end_time - start_time > 30000 and end_time - start_time < 35000):
+    elif(end_time - start_time > 42000 and end_time - start_time < 49000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -237,7 +237,7 @@ while state:
         niz_x.append(x7)
         niz_y.append(y7)
 
-    elif(end_time - start_time > 35000 and end_time - start_time < 40000):
+    elif(end_time - start_time > 49000 and end_time - start_time < 56000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -250,7 +250,7 @@ while state:
         niz_x.append(x8)
         niz_y.append(y8)
 
-    elif(end_time - start_time > 40000 and end_time - start_time < 45000):
+    elif(end_time - start_time > 56000 and end_time - start_time < 63000):
         pygame.draw.circle(ww, white, (x1,y1), radius)
         pygame.draw.circle(ww, white, (x2,y2), radius)
         pygame.draw.circle(ww, white, (x3,y3), radius)
@@ -276,7 +276,7 @@ while state:
 cap.release()
 cv2.destroyAllWindows()
 
-t = np.linspace(0, 45, len(xosa))
+t = np.linspace(0, 63, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
 plt.plot(t, xosa_filter)
