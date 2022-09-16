@@ -63,6 +63,9 @@ def koordinate(circles, frame):
     return center, radius
 
 
+ax = [ 5.32347379e+03, -1.78686432e+01, 2.51809998e+00]
+ay = [-2.86055520e+03, -8.13960593e-01, 1.37511316e+01]
+
 pygame.init()
 
 white = (255, 255, 255)
@@ -104,8 +107,11 @@ xosa_filter = []
 yosa_filter = []
 rskup_filter = []
 
-niz_x = []
-niz_y = []
+niz_x = [] # ekran
+niz_y = [] # ekran
+
+x_predvidjeno = []
+y_predvidjeno = []
 
 n = 10
 i = 0
@@ -161,6 +167,12 @@ while state:
         c = n + 5
         yosa_filter.append(np.mean(yosa[i-c:i]))
 
+    xp = ax[0] + ax[1] * xosa_filter[i] + ax[2] * yosa_filter[i]
+    yp = ay[0] + ay[1] * xosa_filter[i] + ay[2] * yosa_filter[i]
+
+    x_predvidjeno.append(xp)
+    y_predvidjeno.append(yp)    
+
     if(end_time - start_time<t):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
@@ -169,6 +181,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
         
 
     elif(end_time - start_time > t and end_time - start_time < t*2):
@@ -179,6 +193,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     elif(end_time - start_time > t*2 and end_time - start_time < t*3):
         for j in range (tacaka):
@@ -188,6 +204,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     elif(end_time - start_time > t*3 and end_time - start_time < t*4):
         for j in range (tacaka):
@@ -197,6 +215,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     elif(end_time - start_time > t*4 and end_time - start_time < t*5):
         for j in range (tacaka):
@@ -206,6 +226,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     elif(end_time - start_time > t*5 and end_time - start_time < t*6):
         for j in range (tacaka):
@@ -215,6 +237,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     elif(end_time - start_time > t*6 and end_time - start_time < t*7):
         for j in range (tacaka):
@@ -224,6 +248,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
 
     elif(end_time - start_time > t*7 and end_time - start_time < t*8):
@@ -234,6 +260,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
 
     elif(end_time - start_time > t*8 and end_time - start_time < t*9):
@@ -244,6 +272,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
 
     
     else: state = False
@@ -283,22 +313,22 @@ plt.show()
 
 
 
-# fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\plotovanje.txt", 'w')
-# fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
+fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\provera.txt", 'w')
+fp.write('x_predvidjeno,y_predvidjeno,x_ekran,y_ekran\n')
 
-# minLen = min(len(xosa_filter), len(niz_x))
-# if len(xosa_filter) > minLen:
-#     print("Xosa je duzi za ", len(xosa_filter) - minLen)
-#     xosa_filter = xosa_filter[:minLen]
-#     yosa_filter = yosa_filter[:minLen]
-# if len(niz_x) > minLen:
-#     print("Niz x je duzi za", len(niz_x) - minLen)
-#     niz_x = niz_x[:minLen]
+minLen = min(len(x_predvidjeno), len(niz_x))
+if len(x_predvidjeno) > minLen:
+      print("Xosa je duzi za ", len(xosa_filter) - minLen)
+      x_predvidjeno = x_predvidjeno[:minLen]
+      y_predvidjeno = y_predvidjeno[:minLen]
+if len(niz_x) > minLen:
+      print("Niz x je duzi za", len(niz_x) - minLen)
+      niz_x = niz_x[:minLen]
 
-# for i in range(len(xosa_filter)):
-#     if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
-#         continue 
-#     fp.write(f'{xosa_filter[i]},{yosa_filter[i]},{niz_x[i]},{niz_y[i]}\n')
+for i in range(len(x_predvidjeno)):
+      if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
+          continue 
+      fp.write(f'{x_predvidjeno[i]},{y_predvidjeno[i]},{niz_x[i]},{niz_y[i]}\n')
 
 
 

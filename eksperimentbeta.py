@@ -1,4 +1,5 @@
 from os import times_result
+from turtle import width
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -66,7 +67,7 @@ def koordinate(circles, frame):
     return center, radius
 
 
-kamera = 1
+kamera = 0
 cap = cv2.VideoCapture(kamera)
 set_color = True
 xosa = []
@@ -89,6 +90,11 @@ while True:
         flag, frame = cap.read()
         circles, bin, edges = frame_work(frame)
         eyePozit, r =  koordinate(circles, frame)
+
+        width, height = frame.shape[:2]
+        cv2.line(frame, (width//2, 0), (width//2, height), (0, 0, 255), 5) 
+        cv2.line(frame, (0, height//2), (width, height//2), (0, 0, 255), 5)
+
         cv2.imshow('Siva', frame)
         cv2.imshow('Binarizovano', bin)
         cv2.imshow('Keni', edges)

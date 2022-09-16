@@ -88,6 +88,10 @@ while cap.isOpened():
             cv2.circle(rgb, center, radius, (255, 0, 0), 10)
             cv2.circle(edges, center, radius, (255, 0, 0), 10)
     
+    height, width = blure.shape[:2]
+    cv2.line(blure, (width//2, 0), (width//2, height), 50)
+    cv2.line(blure, (0, height//2), (width, height//2), 50)
+
     cv2.imshow('Siva', frame)
     cv2.imshow('RGB+circle', rgb)
     cv2.imshow('Binarizovano', bin)
