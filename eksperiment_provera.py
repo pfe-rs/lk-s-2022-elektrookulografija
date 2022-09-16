@@ -170,6 +170,12 @@ while state:
     xp = ax[0] + ax[1] * xosa_filter[i] + ax[2] * yosa_filter[i]
     yp = ay[0] + ay[1] * xosa_filter[i] + ay[2] * yosa_filter[i]
 
+    # if xp<=10: xp = 10
+    # elif xp>=window_width-10: xp = window_width-10
+
+    # if yp<=10: yp = 10
+    # elif yp>=window_hieght-10: yp = window_hieght-10
+
     x_predvidjeno.append(xp)
     y_predvidjeno.append(yp)    
 

@@ -36,12 +36,8 @@ for i in range (m):
 
     r1 = (x_predvidjeno[i]-x_poznato[i])**2 + (y_predvidjeno[i]-y_poznato[i])**2
     if(radiusV**2>=r1):
-        br += br
+        br += 1
 
-if br != 0:
-    procenat = m/br
-    print(procenat)
-elif br == 0:
-    print("nema podudaranja")
+print(br/m)
 
 
