@@ -176,10 +176,10 @@ while state:
     # if yp<=10: yp = 10
     # elif yp>=window_hieght-10: yp = window_hieght-10
 
-    x_predvidjeno.append(xp)
-    y_predvidjeno.append(yp)    
+     
+    if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
-    if(end_time - start_time<t):
+    elif(end_time - start_time > t and end_time - start_time < t*2):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 0):
@@ -187,11 +187,13 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
         
 
-    elif(end_time - start_time > t and end_time - start_time < t*2):
+    elif(end_time - start_time > t*2 and end_time - start_time < t*3):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 1):
@@ -199,10 +201,12 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
-    elif(end_time - start_time > t*2 and end_time - start_time < t*3):
+    elif(end_time - start_time > t*3 and end_time - start_time < t*4):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 2):
@@ -210,10 +214,12 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
-    elif(end_time - start_time > t*3 and end_time - start_time < t*4):
+    elif(end_time - start_time > t*4 and end_time - start_time < t*5):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 3):
@@ -221,10 +227,12 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
-    elif(end_time - start_time > t*4 and end_time - start_time < t*5):
+    elif(end_time - start_time > t*5 and end_time - start_time < t*6):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 4):
@@ -232,10 +240,12 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
-    elif(end_time - start_time > t*5 and end_time - start_time < t*6):
+    elif(end_time - start_time > t*6 and end_time - start_time < t*7):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 5):
@@ -243,10 +253,12 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
-    elif(end_time - start_time > t*6 and end_time - start_time < t*7):
+    elif(end_time - start_time > t*7 and end_time - start_time < t*8):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 6):
@@ -254,18 +266,8 @@ while state:
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
-
-
-
-    elif(end_time - start_time > t*7 and end_time - start_time < t*8):
-        for j in range (tacaka):
-            pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
-            if(j == 7):
-                pygame.draw.circle(ww, red, (x[j],y[j]), radius1)
-                niz_x.append(x[j])
-                niz_y.append(y[j])
-            else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
@@ -273,11 +275,27 @@ while state:
     elif(end_time - start_time > t*8 and end_time - start_time < t*9):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
+            if(j == 7):
+                pygame.draw.circle(ww, red, (x[j],y[j]), radius1)
+                niz_x.append(x[j])
+                niz_y.append(y[j])
+            else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
+            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+
+
+
+    elif(end_time - start_time > t*9 and end_time - start_time < t*10):
+        for j in range (tacaka):
+            pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 8):
                 pygame.draw.circle(ww, red, (x[j],y[j]), radius1)
                 niz_x.append(x[j])
                 niz_y.append(y[j])
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
+            x_predvidjeno.append(xp)
+            y_predvidjeno.append(yp) 
             pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
