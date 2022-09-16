@@ -10,8 +10,8 @@ import math
 
 def remove_noise(img):
 
-    kernel1 = np.ones((25, 25), np.uint8)
-    kernel2 = np.ones((9, 9),np.uint8)
+    kernel1 = np.ones((17, 17), np.uint8)
+    kernel2 = np.ones((15, 15),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -33,17 +33,17 @@ def frame_work(frame):
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
-    blure = cv2.GaussianBlur(gray,(25,25),150)
+    blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.20)
+    thr = get_threshold(blure, 0.13)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
-    #mask = remove_noise(bin)   
+    mask = remove_noise(bin)   
     #keni
-    edges = cv2.Canny(bin, 120, 160) # 75, 150
+    edges = cv2.Canny(mask, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=110)
     
     return circles, bin, edges
 

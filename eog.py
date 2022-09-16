@@ -32,7 +32,7 @@ def frame_work(frame):
     #zamutiti
     blure = cv2.GaussianBlur(gray,(25,25),150)
     #binarizacija
-    thr = get_threshold(blure, 0.20)
+    thr = get_threshold(blure, 0.13)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
