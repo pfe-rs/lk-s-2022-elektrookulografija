@@ -7,73 +7,25 @@ import pygame
 import serial
 import time
 import math
-from eog import frame_work, koordinate
+from eog import *
 
 """
+#stari parametri
 ax = [836.75768617, -9.90113855, 13.87188183]
 ay = [-3.44557824e+02, -9.46133751e-02, 3.29555479e+00]
 """
 
+#11,1
 ax = [ 5.09363881e+03, -1.54116705e+01, 3.97037117e-01]
 ay = [-3.43612717e+03, 2.82582983e+00, 1.48521313e+01]
 
-def remove_noise(img):
 
-    kernel1 = np.ones((17, 17), np.uint8)
-    kernel2 = np.ones((9, 9),np.uint8)
-
-    iterations = 1
-    img1 = img.copy()
-
-    img1 = cv2.erode(img1, kernel1, iterations)
-    img1 = cv2.dilate(img1, kernel2, iterations)
-    
-    return img1
-
-def get_threshold(frame, p):
-    image_hist = np.histogram(frame.flatten(), 256)[0]
-    image_cum_hist = np.cumsum(image_hist)
-    image_cum_hist = image_cum_hist / image_cum_hist[-1]
-    image_cum_hist = (image_cum_hist > p).astype(int)
-    thr = np.argmax(np.diff(image_cum_hist))
-    return thr
-
-def frame_work(frame):
-    #crno-belo      
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #zamutiti
-    blure = cv2.GaussianBlur(gray,(29,29),150)
-    #binarizacija
-    thr = get_threshold(blure, 0.15)
-    ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
-    #dilatacija i erozija
-    #mask = remove_noise(bin)   
-    #keni
-    edges = cv2.Canny(bin, 120, 160) # 75, 150
-    #krugovi
-    rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=120)
-    
-    return circles, bin, edges
-
-def koordinate(circles, frame):
-    center = (0, 0)
-    radius = 1
-    if circles is not None:
-        circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
-            center = (i[0], i[1]) #ovde mozda
-            # circle center
-            cv2.circle(frame, center, 1, (255, 0, 0), 10)
-
-            # circle outline
-            radius = i[2]
-            cv2.circle(frame, center, radius, (255, 0, 0), 10)
-    return center, radius
-
+# ax = [-4295.04507074, 12.34682974, -14.31665959]
+# ay =[ 1.03875740e+04, -5.46584294e+00,-2.39519636e+01]
 
 pygame.init()
 
+#boje
 white = (255, 255, 255)
 red = (200, 0 , 0)
 yellow = (90,90,90)
@@ -81,12 +33,14 @@ blue = (100, 50, 255)
 black = (0, 0, 0)
 orange = (255, 165, 0)
 
+
+#inicijalizacija pzgame prozora
 window_width = 1000
 window_hieght = 500
 
 ww = pygame.display.set_mode((window_width, window_hieght))
 pygame.display.set_caption('Gledaj u tacku koja se cveni')
-
+#inicijalizacija kordinata tačaka koje gledamo i poluprečnika istih
 x = [0] * 9
 y = [0] * 9
  
@@ -125,6 +79,7 @@ k = 0
 t = 10000
 tacaka = 9
 
+#inicijalizacija  pzgame sata
 clock = pygame.time.Clock() 
 state = True
 
@@ -144,10 +99,13 @@ while state:
 
     end_time =  pygame.time.get_ticks()
 
+    #izračunavanje koordinata kruga i obrada slike
     flag, frame = cap.read()
     circles, bin, edges = frame_work(frame)
     eyePozit, r =  koordinate(circles, frame)
 
+
+    #prikazivanje slike
     width, height = bin.shape[:2]
     cv2.line(bin, (height//2, 0), (height//2, width), (0, 0, 255), 5) 
     cv2.line(bin , (0, width//2), (height, width//2), (0, 0, 255), 5)
@@ -162,7 +120,7 @@ while state:
     yosa.append(eyePozit[1])
     rskup.append(r)
 
-    #milomir's filter  
+    #filter za dobijene kordinate (srednja vrednost)  
     if(i<n):
         xosa_filter.append(np.mean(xosa[0:i]))
         yosa_filter.append(np.mean(yosa[0:i]))
@@ -173,19 +131,26 @@ while state:
         c = n + 5
         yosa_filter.append(np.mean(yosa[i-c:i]))
 
-    xp = ax[0] + ax[1] * xosa_filter[i] + ax[2] * yosa_filter[i]
-    yp = ay[0] + ay[1] * xosa_filter[i] + ay[2] * yosa_filter[i]
+    #izračunavanje polinominalne regresije
+    from matrice_parametri import getCalibration
+    x_model, y_model = getCalibration(10)
 
+    xp = x_model(xosa_filter[i])
+    yp = y_model(yosa_filter[i])
+    #xp = ax[0] + ax[1] * xosa_filter[i] + ax[2] * yosa_filter[i]
+    #yp = ay[0] + ay[1] * xosa_filter[i] + ay[2] * yosa_filter[i]
+
+    #zadavanje granica za predviđene tačke
     if xp<=100: xp = 100
     elif xp>=window_width-100: xp = window_width-100
 
     if yp<=100: yp = 100
     elif yp>=window_hieght-100: yp = window_hieght-100
 
-     
-    if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30, height)
-
-    elif(end_time - start_time > t and end_time - start_time < t*2):
+    #iscrtavanje tačaka koje treba gledati i i predviđene pozicije pogleda
+    #if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30, height)
+    #dodavanje kordinata tačaka iscrtanih na ekranu u niz
+    if(end_time - start_time > t and end_time - start_time < t*2):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 0):
@@ -319,6 +284,7 @@ while state:
 cap.release()
 cv2.destroyAllWindows()
 
+#prikazivanje pozicije dobijenih kordinata u odnosu na vreme
 t = np.linspace(0, 90, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
@@ -341,8 +307,8 @@ plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
 
-
-
+#upisivanje dobijenih kordinata u fajl
+"""
 fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\provera.txt", 'w')
 fp.write('x_predvidjeno,y_predvidjeno,x_ekran,y_ekran\n')
 
@@ -360,7 +326,7 @@ for i in range(len(x_predvidjeno)):
           continue 
       fp.write(f'{x_predvidjeno[i]},{y_predvidjeno[i]},{niz_x[i]},{niz_y[i]}\n')
 
-
+"""
 
 pygame.quit()
 quit()

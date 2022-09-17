@@ -6,62 +6,10 @@ import numpy as np
 import pygame 
 import serial
 import time
+
 import math
 
-def remove_noise(img):
-
-    kernel1 = np.ones((17, 17), np.uint8)
-    kernel2 = np.ones((9, 9),np.uint8)
-
-    iterations = 1
-    img1 = img.copy()
-
-    img1 = cv2.erode(img1, kernel1, iterations)
-    img1 = cv2.dilate(img1, kernel2, iterations)
-    
-    return img1
-
-def get_threshold(frame, p):
-    image_hist = np.histogram(frame.flatten(), 256)[0]
-    image_cum_hist = np.cumsum(image_hist)
-    image_cum_hist = image_cum_hist / image_cum_hist[-1]
-    image_cum_hist = (image_cum_hist > p).astype(int)
-    thr = np.argmax(np.diff(image_cum_hist))
-    return thr
-
-def frame_work(frame):
-    #crno-belo      
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #zamutiti
-    blure = cv2.GaussianBlur(gray,(29,29),150)
-    #binarizacija
-    thr = get_threshold(blure, 0.15)
-    ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
-    #dilatacija i erozija
-    #mask = remove_noise(bin)   
-    #keni
-    edges = cv2.Canny(bin, 120, 160) # 75, 150
-    #krugovi
-    rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=120)
-    
-    return circles, bin, edges
-
-def koordinate(circles, frame):
-    center = (0, 0)
-    radius = 1
-    if circles is not None:
-        circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
-            center = (i[0], i[1]) #ovde mozda
-            # circle center
-            cv2.circle(frame, center, 1, (255, 0, 0), 10)
-
-            # circle outline
-            radius = i[2]
-            cv2.circle(frame, center, radius, (255, 0, 0), 10)
-    return center, radius
-
+from eog import *
 
 pygame.init()
 
@@ -77,10 +25,11 @@ window_hieght = 500
 
 ww = pygame.display.set_mode((window_width, window_hieght))
 pygame.display.set_caption('Gledaj u tacku koja se cveni')
-
+#pravljenje 9 tacaka
+#mozda odavde
 x = [0] * 9
 y = [0] * 9
- 
+ #inicijalizacija po redosledu
 x[0] = x[5] = x[6] = 100
 x[1] = x[4] = x[7] = window_width // 2
 x[2] = x[3] = x[8] = window_width - 100
@@ -88,55 +37,58 @@ x[2] = x[3] = x[8] = window_width - 100
 y[0] = y[1] = y[2] = 100
 y[3] = y[4] = y[5] = window_hieght//2
 y[6] = y[7] = y[8] = window_hieght - 100
-
+#radius manje i vece tacke sa ekrana
 radius1 = 22
 radius2 = 66
-
+#ukljucivanje kamere
 kamera = 1
 cap = cv2.VideoCapture(kamera)
 set_color = True
-
+#niz za tacke koje mi gledamo
 xosa = []
 yosa = []
 rskup = []
-
+#niz za filtrirane tacke
 xosa_filter = []
 yosa_filter = []
 rskup_filter = []
-
+#niz za
 niz_x = []
 niz_y = []
 
 n = 10
 i = 0
 k = 0
-t = 10000 #10000
+#vreme za timer
+t = 10000#u ms
 tacaka = 9
-
+#timer
 clock = pygame.time.Clock() 
-state = True
-
+state = True #is on
+#pocetno i krajnje vreme preko kojih se racuna proteklo vreme
 start_time = pygame.time.get_ticks()
 end_time = 0
 
 while state:
-
+#if it works->>
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             state = False
-
+#refresh-ovanje ekrana
     pygame.display.update()
     clock.tick(30)
-    
+    #background
     ww.fill(black)
 
     end_time =  pygame.time.get_ticks()
-
+    #pozivanje obradjenih slika
     flag, frame = cap.read()
     circles, bin, edges = frame_work(frame)
+    #pozicija oka i radius
     eyePozit, r =  koordinate(circles, frame)
-
+    #ekran
     width, height = bin.shape[:2]
+    #koord sistem za centriranje zenice
     cv2.line(bin, (height//2, 0), (height//2, width), (0, 0, 255), 5) 
     cv2.line(bin , (0, width//2), (height, width//2), (0, 0, 255), 5)
     
@@ -145,13 +97,12 @@ while state:
     # cv2.imshow('Keni', edges)
     # if cv2.waitKey(1) & 0xFF == ord('q'):
     #      break
-
-    xosa.append(window_width - eyePozit[0])
-    yosa.append(window_hieght - eyePozit[1])
+    #dodavanje u koordinate
+    xosa.append(eyePozit[0])
+    yosa.append(eyePozit[1])
     rskup.append(r)
 
     #milomir's filter  
-    #mozda ovde
     if(i<n):
         xosa_filter.append(np.mean(xosa[0:i]))
         yosa_filter.append(np.mean(yosa[0:i]))
@@ -161,9 +112,11 @@ while state:
         rskup_filter.append(np.mean(rskup[i-n:i]))
         c = n + 5
         yosa_filter.append(np.mean(yosa[i-c:i]))
-
+    #ako je vreme manje od pocetnog
     if(end_time - start_time<t):
+        #za svaku tacku
         for j in range (tacaka):
+            #crtanje krugova
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 0):
                 pygame.draw.circle(ww, red, (x[j],y[j]), radius1)
@@ -283,10 +236,11 @@ plt.ylabel('r - axis')
 plt.show()
 
 
-
+#upisivanje u datoteku
 fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\novi_podaci.txt", 'w')
 fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
 
+#provera i uporedjivanje duzine niza, i skracivanje po potrebi
 minLen = min(len(xosa_filter), len(niz_x))
 if len(xosa_filter) > minLen:
      print("Xosa je duzi za ", len(xosa_filter) - minLen)
@@ -296,7 +250,7 @@ if len(niz_x) > minLen:
      print("Niz x je duzi za", len(niz_x) - minLen)
      niz_x = niz_x[:minLen]
 
- 
+#upisivanje u niz
 for i in range(len(xosa_filter)):
      if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
          continue 

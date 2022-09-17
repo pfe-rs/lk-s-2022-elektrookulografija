@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 from scipy.optimize import differential_evolution
-
+#f-ja za uklanjanje suma
 def remove_noise(img):
 
     kernel1 = np.ones((17, 17), np.uint8)
@@ -12,12 +12,12 @@ def remove_noise(img):
 
     iterations = 1
     img1 = img.copy()
-
+    #erozija i dilatacija
     img1 = cv2.erode(img1, kernel1, iterations)
     img1 = cv2.dilate(img1, kernel2, iterations)
     
     return img1
-
+#dobijanje praga pomocu histograma
 def get_threshold(frame, p):
     image_hist = np.histogram(frame.flatten(), 256)[0]
     image_cum_hist = np.cumsum(image_hist)
@@ -25,25 +25,25 @@ def get_threshold(frame, p):
     image_cum_hist = (image_cum_hist > p).astype(int)
     thr = np.argmax(np.diff(image_cum_hist))
     return thr
-
+#f-ja u kojoj se dobija circle zenice, blurovana slika i canny
 def frame_work(frame):
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
     blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.15)
+    thr = get_threshold(blure, 0.05)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
     #keni
     edges = cv2.Canny(bin, 120, 160) # 75, 150
     #krugovi
-    rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=120)
+    rows = frame.shape[0]#rows*7, minr = 70, maxr = 120
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*10, param1=150, param2=12, minRadius=50, maxRadius=100)
     
     return circles, bin, edges 
-
+#dobijanje koordinata centra i radius
 def koordinate(circles, frame):
     center = (0, 0)
     radius = 1
@@ -59,7 +59,7 @@ def koordinate(circles, frame):
             cv2.circle(frame, center, radius, (255, 0, 0), 10)
     return center, radius
 
-
+#ukljucivanje kamere
 kamera = 1
 cap = cv2.VideoCapture(kamera)
 set_color = True
@@ -67,16 +67,15 @@ set_color = True
 #width, height, t = frame.shape
 
 while cap.isOpened():
-    
+    #citanje videa
     ret, frame = cap.read()
     rgb = frame.copy()
-
-    
     
     circles, bin,  edges  = frame_work(frame)
     # erozija i dilatacije 
     
     if circles is not None:
+        #niz circles pomocu kojeg se zadaje centar
         circles = np.uint16(np.around(circles))
         for i in circles[0, :]:
             center = (i[0], i[1])
@@ -89,18 +88,11 @@ while cap.isOpened():
             cv2.circle(rgb, center, radius, (255, 0, 0), 10)
             cv2.circle(edges, center, radius, (255, 0, 0), 10)
     
-    height, width = blure.shape[:2]
-    cv2.line(blure, (width//2, 0), (width//2, height), 50)
-    cv2.line(blure, (0, height//2), (width, height//2), 50)
-
     cv2.imshow('Siva', frame)
     cv2.imshow('RGB+circle', rgb)
     cv2.imshow('Binarizovano', bin)
     cv2.imshow('Keni', edges)
-    cv2.imshow('Mutna', blure)
-    
-   # cv2.imshow('Nadjena boja', indikator)
-    
+    #closing on 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
         
