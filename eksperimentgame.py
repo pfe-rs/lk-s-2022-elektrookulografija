@@ -10,8 +10,8 @@ import math
 
 def remove_noise(img):
 
-    kernel1 = np.ones((25, 25), np.uint8)
-    kernel2 = np.ones((9, 9),np.uint8)
+    kernel1 = np.ones((17, 17), np.uint8)
+    kernel2 = np.ones((15, 15),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -33,9 +33,9 @@ def frame_work(frame):
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
-    blure = cv2.GaussianBlur(gray,(25,25),150)
+    blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.20)
+    thr = get_threshold(blure, 0.13)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
@@ -43,7 +43,7 @@ def frame_work(frame):
     edges = cv2.Canny(bin, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=120)
     
     return circles, bin, edges
 
@@ -53,7 +53,7 @@ def koordinate(circles, frame):
     if circles is not None:
         circles = np.uint16(np.around(circles))
         for i in circles[0, :]:
-            center = (i[0], i[1])
+            center = (i[0], i[1]) #ovde mozda
             # circle center
             cv2.circle(frame, center, 1, (255, 0, 0), 10)
 
@@ -151,6 +151,7 @@ while state:
     rskup.append(r)
 
     #milomir's filter  
+    #mozda ovde
     if(i<n):
         xosa_filter.append(np.mean(xosa[0:i]))
         yosa_filter.append(np.mean(yosa[0:i]))
@@ -283,22 +284,23 @@ plt.show()
 
 
 
-# fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\plotovanje.txt", 'w')
-# fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
+fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\novi_podaci.txt", 'w')
+fp.write('x_osa,y_osa,x_tacka,y_tacka\n')
 
-# minLen = min(len(xosa_filter), len(niz_x))
-# if len(xosa_filter) > minLen:
-#     print("Xosa je duzi za ", len(xosa_filter) - minLen)
-#     xosa_filter = xosa_filter[:minLen]
-#     yosa_filter = yosa_filter[:minLen]
-# if len(niz_x) > minLen:
-#     print("Niz x je duzi za", len(niz_x) - minLen)
-#     niz_x = niz_x[:minLen]
+minLen = min(len(xosa_filter), len(niz_x))
+if len(xosa_filter) > minLen:
+     print("Xosa je duzi za ", len(xosa_filter) - minLen)
+     xosa_filter = xosa_filter[:minLen]
+     yosa_filter = yosa_filter[:minLen]
+if len(niz_x) > minLen:
+     print("Niz x je duzi za", len(niz_x) - minLen)
+     niz_x = niz_x[:minLen]
 
-# for i in range(len(xosa_filter)):
-#     if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
-#         continue 
-#     fp.write(f'{xosa_filter[i]},{yosa_filter[i]},{niz_x[i]},{niz_y[i]}\n')
+ 
+for i in range(len(xosa_filter)):
+     if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
+         continue 
+     fp.write(f'{xosa_filter[i]},{yosa_filter[i]},{niz_x[i]},{niz_y[i]}\n')
 
 
 

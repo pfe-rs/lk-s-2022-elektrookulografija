@@ -63,8 +63,8 @@ def koordinate(circles, frame):
     return center, radius
 
 
-ax = [ 5.32347379e+03, -1.78686432e+01, 2.51809998e+00]
-ay = [-2.86055520e+03, -8.13960593e-01, 1.37511316e+01]
+ax = [836.75768617, -9.90113855, 13.87188183]
+ay = [-3.44557824e+02, -9.46133751e-02, 3.29555479e+00]
 
 pygame.init()
 
@@ -146,11 +146,11 @@ while state:
     cv2.line(bin, (height//2, 0), (height//2, width), (0, 0, 255), 5) 
     cv2.line(bin , (0, width//2), (height, width//2), (0, 0, 255), 5)
     
-    # cv2.imshow('Siva', frame)
-    # cv2.imshow('Binarizovano', bin)
-    # cv2.imshow('Keni', edges)
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #      break
+    cv2.imshow('Siva', frame)
+    cv2.imshow('Binarizovano', bin)
+    cv2.imshow('Keni', edges)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
 
     xosa.append(eyePozit[0])
     yosa.append(eyePozit[1])
@@ -170,11 +170,11 @@ while state:
     xp = ax[0] + ax[1] * xosa_filter[i] + ax[2] * yosa_filter[i]
     yp = ay[0] + ay[1] * xosa_filter[i] + ay[2] * yosa_filter[i]
 
-    # if xp<=10: xp = 10
-    # elif xp>=window_width-10: xp = window_width-10
+    if xp<=100: xp = 100
+    elif xp>=window_width-100: xp = window_width-100
 
-    # if yp<=10: yp = 10
-    # elif yp>=window_hieght-10: yp = window_hieght-10
+    if yp<=100: yp = 100
+    elif yp>=window_hieght-100: yp = window_hieght-100
 
      
     if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30, height)
@@ -189,7 +189,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
         
 
@@ -203,7 +203,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     elif(end_time - start_time > t*3 and end_time - start_time < t*4):
@@ -216,7 +216,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     elif(end_time - start_time > t*4 and end_time - start_time < t*5):
@@ -229,7 +229,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     elif(end_time - start_time > t*5 and end_time - start_time < t*6):
@@ -242,7 +242,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     elif(end_time - start_time > t*6 and end_time - start_time < t*7):
@@ -255,7 +255,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     elif(end_time - start_time > t*7 and end_time - start_time < t*8):
@@ -268,7 +268,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
 
@@ -282,7 +282,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
 
@@ -296,7 +296,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            #pygame.draw.circle(ww, white, (xp, yp), 30, height)
 
 
     

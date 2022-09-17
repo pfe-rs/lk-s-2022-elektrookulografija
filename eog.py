@@ -40,7 +40,7 @@ def frame_work(frame):
     edges = cv2.Canny(bin, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=80, maxRadius=120)
     
     return frame,  bin, blure, edges, circles
 

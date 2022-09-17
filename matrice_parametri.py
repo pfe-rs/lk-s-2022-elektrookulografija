@@ -8,7 +8,7 @@ from numpy.linalg import inv
 
 
 podaci = []
-with open("plot.txt", 'r') as f:
+with open("obradjena_baza.txt", 'r') as f:
      next(f)
      for myline in f:
          arr = myline.split(',')
@@ -25,28 +25,26 @@ n = 3
 m = len(podaci)
 
 zenica = np.zeros((m,n))
+pogledx = np.zeros((m,1))
+pogledy = np.zeros((m,1))
 
 for i in range (m): 
     zenica[i][0] = 1
     zenica[i][1] = podaci[i][0]
     zenica[i][2] = podaci[i][1]
+    pogledx[i][0] = podaci[i][2]
+    pogledy[i][0] = podaci[i][3]
 
-pogledx = np.zeros((m,1))
-pogledy = np.zeros((m,1))
-
-for i in range (m):
-     pogledx[i][0] = podaci[i][2]
-     pogledy[i][0] = podaci[i][3]
 
 t_zenica = np.transpose(zenica)
 
 
-mnozenje = np.dot(t_zenica, zenica)
+mnozenje = np.matmul(t_zenica, zenica)
 invertovana = inv(mnozenje)
-inv_mno = np.dot(invertovana, t_zenica)
+inv_mno = np.matmul(invertovana, t_zenica)
 
-ax = np.dot(inv_mno, pogledx)
-ay = np.dot(inv_mno, pogledy)
+ax = np.matmul(inv_mno, pogledx)
+ay = np.matmul(inv_mno, pogledy)
 
 print(ax)
 print(ay)
