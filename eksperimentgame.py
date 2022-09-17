@@ -11,7 +11,7 @@ import math
 def remove_noise(img):
 
     kernel1 = np.ones((17, 17), np.uint8)
-    kernel2 = np.ones((15, 15),np.uint8)
+    kernel2 = np.ones((9, 9),np.uint8)
 
     iterations = 1
     img1 = img.copy()
@@ -35,7 +35,7 @@ def frame_work(frame):
     #zamutiti
     blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.13)
+    thr = get_threshold(blure, 0.15)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
@@ -110,7 +110,7 @@ niz_y = []
 n = 10
 i = 0
 k = 0
-t = 10000
+t = 10000 #10000
 tacaka = 9
 
 clock = pygame.time.Clock() 
@@ -146,8 +146,8 @@ while state:
     # if cv2.waitKey(1) & 0xFF == ord('q'):
     #      break
 
-    xosa.append(eyePozit[0])
-    yosa.append(eyePozit[1])
+    xosa.append(window_width - eyePozit[0])
+    yosa.append(window_hieght - eyePozit[1])
     rskup.append(r)
 
     #milomir's filter  

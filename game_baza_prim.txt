@@ -1,0 +1,1 @@
+smooth_x,smooth_y,x_tacka,y_tacka

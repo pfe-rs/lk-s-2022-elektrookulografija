@@ -1,6 +1,7 @@
 from ctypes.wintypes import DOUBLE
 import math
 from re import T
+from turtle import color
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -37,6 +38,17 @@ for i in range (m):
     r1 = (x_predvidjeno[i]-x_poznato[i])**2 + (y_predvidjeno[i]-y_poznato[i])**2
     if(radiusV**2>=r1):
         br += 1
+
+plt.figure()
+plt.subplot(121)
+plt.plot( y_predvidjeno, x_predvidjeno, 'o',color = 'black')
+plt.xlabel('x_predvidjeno')
+plt.ylabel('y_predvidjeno')
+plt.subplot(122)
+plt.plot( y_poznato, x_poznato, 'o',color = 'black')
+plt.xlabel('x_poznato')
+plt.ylabel('y_poznato')
+plt.show()
 
 print(br/m)
 

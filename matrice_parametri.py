@@ -46,5 +46,7 @@ inv_mno = np.matmul(invertovana, t_zenica)
 ax = np.matmul(inv_mno, pogledx)
 ay = np.matmul(inv_mno, pogledy)
 
+
+
 print(ax)
 print(ay)

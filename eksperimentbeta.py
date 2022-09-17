@@ -7,67 +7,11 @@ import pygame
 import serial
 import time
 import math
-
-import control
-from scipy.optimize import differential_evolution
+from eog import frame_work, koordinate, get_threshold, remove_noise
 
 
-def remove_noise(img):
 
-    kernel1 = np.ones((10, 10), np.uint8)
-    kernel2 = np.ones((8, 8),np.uint8)
-
-    iterations = 1
-    img1 = img.copy()
-
-    img1 = cv2.erode(img1, kernel1, iterations)
-    img1 = cv2.dilate(img1, kernel2, iterations)
-    
-    return img1
-
-def get_threshold(frame, p):
-    image_hist = np.histogram(frame.flatten(), 256)[0]
-    image_cum_hist = np.cumsum(image_hist)
-    image_cum_hist = image_cum_hist / image_cum_hist[-1]
-    image_cum_hist = (image_cum_hist > p).astype(int)
-    thr = np.argmax(np.diff(image_cum_hist))
-    return thr
-
-def frame_work(frame):
-    #crno-belo      
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #zamutiti
-    blure = cv2.GaussianBlur(gray,(15,15),0)
-    #binarizacija
-    thr = get_threshold(blure, 0.15)
-    ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
-    #dilatacija i erozija
-    mask = remove_noise(bin)   
-    #keni
-    edges = cv2.Canny(mask, 120, 160) # 75, 150
-    #krugovi
-    rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=50, maxRadius=100)
-    
-    return circles, bin, edges
-
-def koordinate(circles, frame):
-    center = (0, 0)
-    radius = 1
-    if circles is not None:
-        circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
-            center = (i[0], i[1])
-            # circle center
-            cv2.circle(frame, center, 1, (255, 0, 0), 10)
-
-            # circle outline
-            radius = i[2]
-            cv2.circle(frame, center, radius, (255, 0, 0), 10)
-    return center, radius
-
-
-kamera = 0
+kamera = 1
 cap = cv2.VideoCapture(kamera)
 set_color = True
 xosa = []
@@ -95,9 +39,9 @@ while True:
         cv2.line(frame, (width//2, 0), (width//2, height), (0, 0, 255), 5) 
         cv2.line(frame, (0, height//2), (width, height//2), (0, 0, 255), 5)
 
-        cv2.imshow('Siva', frame)
-        cv2.imshow('Binarizovano', bin)
-        cv2.imshow('Keni', edges)
+        # cv2.imshow('Siva', frame)
+        # cv2.imshow('Binarizovano', bin)
+        # cv2.imshow('Keni', edges)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -137,7 +81,7 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 
-t = np.linspace(0, 20, len(xosa))
+t = np.linspace(0, 45, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
 plt.plot(t, xosa_filter)
@@ -158,3 +102,13 @@ plt.plot(t, rskup_filter)
 plt.xlabel('t - axis')
 plt.ylabel('r - axis')
 plt.show()
+
+fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\game_baza.txt", 'w')
+fp.write('x_osa,y_osa\n')
+
+
+for i in range(len(xosa_filter)):
+     if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
+         continue 
+     fp.write(f'{xosa_filter[i]},{yosa_filter[i]}\n')
+

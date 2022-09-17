@@ -7,7 +7,7 @@ from scipy.optimize import differential_evolution
 
 def remove_noise(img):
 
-    kernel1 = np.ones((25, 25), np.uint8)
+    kernel1 = np.ones((17, 17), np.uint8)
     kernel2 = np.ones((9, 9),np.uint8)
 
     iterations = 1
@@ -30,9 +30,9 @@ def frame_work(frame):
     #crno-belo      
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #zamutiti
-    blure = cv2.GaussianBlur(gray,(25,25),150)
+    blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.13)
+    thr = get_threshold(blure, 0.15)
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
@@ -40,9 +40,9 @@ def frame_work(frame):
     edges = cv2.Canny(bin, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*3, param1=150, param2=12, minRadius=80, maxRadius=120)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*7, param1=150, param2=12, minRadius=80, maxRadius=120)
     
-    return frame,  bin, blure, edges, circles
+    return circles, bin, edges 
 
 def koordinate(circles, frame):
     center = (0, 0)
@@ -72,7 +72,8 @@ while cap.isOpened():
     rgb = frame.copy()
 
     
-    frame,  bin, blure, edges, circles = frame_work(frame)
+    
+    circles, bin,  edges  = frame_work(frame)
     # erozija i dilatacije 
     
     if circles is not None:
