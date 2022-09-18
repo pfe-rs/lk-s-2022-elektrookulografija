@@ -20,8 +20,8 @@ blue = (100, 50, 255)
 black = (0, 0, 0)
 orange = (255, 165, 0)
 
-window_width = 1000
-window_hieght = 500
+window_width = 1400
+window_hieght = 800
 
 ww = pygame.display.set_mode((window_width, window_hieght))
 pygame.display.set_caption('Gledaj u tacku koja se cveni')
@@ -60,7 +60,7 @@ n = 10
 i = 0
 k = 0
 #vreme za timer
-t = 10000#u ms
+t = 5000#u ms
 tacaka = 9
 #timer
 clock = pygame.time.Clock() 
@@ -92,13 +92,13 @@ while state:
     cv2.line(bin, (height//2, 0), (height//2, width), (0, 0, 255), 5) 
     cv2.line(bin , (0, width//2), (height, width//2), (0, 0, 255), 5)
     
-    # cv2.imshow('Siva', frame)
+    cv2.imshow('Siva', frame)
     # cv2.imshow('Binarizovano', bin)
     # cv2.imshow('Keni', edges)
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #      break
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
     #dodavanje u koordinate
-    xosa.append(eyePozit[0])
+    xosa.append(window_width - eyePozit[0])
     yosa.append(eyePozit[1])
     rskup.append(r)
 
@@ -213,7 +213,7 @@ while state:
 cap.release()
 cv2.destroyAllWindows()
 
-t = np.linspace(0, 90, len(xosa))
+t = np.linspace(0, 45, len(xosa))
 plt.figure()
 plt.plot(t, xosa)
 plt.plot(t, xosa_filter)

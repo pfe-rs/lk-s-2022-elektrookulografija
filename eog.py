@@ -32,16 +32,21 @@ def frame_work(frame):
     #zamutiti
     blure = cv2.GaussianBlur(gray,(29,29),150)
     #binarizacija
-    thr = get_threshold(blure, 0.05)
+    thr = get_threshold(blure, 0.17)
+    #thr = 80
     ret,bin= cv2.threshold(blure,thr,255,cv2.THRESH_BINARY)
     #dilatacija i erozija
     #mask = remove_noise(bin)   
+    mask = bin
     #keni
-    edges = cv2.Canny(bin, 120, 160) # 75, 150
+    edges = cv2.Canny(mask, 120, 160) # 75, 150
     #krugovi
     rows = frame.shape[0]#rows*7, minr = 70, maxr = 120
-    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*10, param1=150, param2=12, minRadius=50, maxRadius=100)
-    
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, 1, rows*6, param1=150, param2=12, minRadius=45, maxRadius=95) #45 95
+    if circles is None: 
+        print('nan')
+    else:
+        print(circles[0][0][2])
     return circles, bin, edges 
 #dobijanje koordinata centra i radius
 def koordinate(circles, frame):

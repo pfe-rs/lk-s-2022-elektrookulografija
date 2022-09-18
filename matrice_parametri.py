@@ -11,7 +11,7 @@ def getCalibration(N):
 
     #uzimanje podataka iz fajla
     podaci = []
-    with open("obradjena_baza.txt", 'r') as f:
+    with open("obrajena_baza.txt", 'r') as f:
         next(f)
         for myline in f:
             arr = myline.split(',')

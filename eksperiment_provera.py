@@ -14,11 +14,11 @@ from eog import *
 ax = [836.75768617, -9.90113855, 13.87188183]
 ay = [-3.44557824e+02, -9.46133751e-02, 3.29555479e+00]
 """
-
+"""
 #11,1
 ax = [ 5.09363881e+03, -1.54116705e+01, 3.97037117e-01]
 ay = [-3.43612717e+03, 2.82582983e+00, 1.48521313e+01]
-
+"""
 
 # ax = [-4295.04507074, 12.34682974, -14.31665959]
 # ay =[ 1.03875740e+04, -5.46584294e+00,-2.39519636e+01]
@@ -35,8 +35,8 @@ orange = (255, 165, 0)
 
 
 #inicijalizacija pzgame prozora
-window_width = 1000
-window_hieght = 500
+window_width = 1400
+window_hieght =800
 
 ww = pygame.display.set_mode((window_width, window_hieght))
 pygame.display.set_caption('Gledaj u tacku koja se cveni')
@@ -106,17 +106,14 @@ while state:
 
 
     #prikazivanje slike
-    width, height = bin.shape[:2]
-    cv2.line(bin, (height//2, 0), (height//2, width), (0, 0, 255), 5) 
-    cv2.line(bin , (0, width//2), (height, width//2), (0, 0, 255), 5)
     
-    cv2.imshow('Siva', frame)
-    cv2.imshow('Binarizovano', bin)
-    cv2.imshow('Keni', edges)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-          break
+    # cv2.imshow('Siva', frame)
+    # cv2.imshow('Binarizovano', bin)
+    # cv2.imshow('Keni', edges)
+    # if cv2.waitKey(1) & 0xFF == ord('q'):
+    #       break
 
-    xosa.append(eyePozit[0])
+    xosa.append(window_width - eyePozit[0])
     yosa.append(eyePozit[1])
     rskup.append(r)
 
@@ -148,9 +145,9 @@ while state:
     elif yp>=window_hieght-100: yp = window_hieght-100
 
     #iscrtavanje tačaka koje treba gledati i i predviđene pozicije pogleda
-    #if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30, height)
+    if(end_time - start_time < t): pygame.draw.circle(ww, white, (xp, yp), 30)
     #dodavanje kordinata tačaka iscrtanih na ekranu u niz
-    if(end_time - start_time > t and end_time - start_time < t*2):
+    elif(end_time - start_time > t and end_time - start_time < t*2):
         for j in range (tacaka):
             pygame.draw.circle(ww, yellow, (x[j],y[j]), radius2)
             if(j == 0):
@@ -160,7 +157,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
         
 
@@ -174,7 +171,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     elif(end_time - start_time > t*3 and end_time - start_time < t*4):
@@ -187,7 +184,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     elif(end_time - start_time > t*4 and end_time - start_time < t*5):
@@ -200,7 +197,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     elif(end_time - start_time > t*5 and end_time - start_time < t*6):
@@ -213,7 +210,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     elif(end_time - start_time > t*6 and end_time - start_time < t*7):
@@ -226,7 +223,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     elif(end_time - start_time > t*7 and end_time - start_time < t*8):
@@ -239,7 +236,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
 
@@ -253,7 +250,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
 
@@ -267,7 +264,7 @@ while state:
             else: pygame.draw.circle(ww, blue, (x[j],y[j]), radius1)
             x_predvidjeno.append(xp)
             y_predvidjeno.append(yp) 
-            pygame.draw.circle(ww, white, (xp, yp), 30, height)
+            pygame.draw.circle(ww, white, (xp, yp), 30)
 
 
     
@@ -308,7 +305,7 @@ plt.ylabel('r - axis')
 plt.show()
 
 #upisivanje dobijenih kordinata u fajl
-"""
+
 fp = open("C:\\Users\\EliteBook\\Documents\\lk-s-2022-elektrookulografija\\provera.txt", 'w')
 fp.write('x_predvidjeno,y_predvidjeno,x_ekran,y_ekran\n')
 
@@ -325,8 +322,6 @@ for i in range(len(x_predvidjeno)):
       if math.isnan(xosa_filter[i]) or math.isnan(yosa_filter[i]):
           continue 
       fp.write(f'{x_predvidjeno[i]},{y_predvidjeno[i]},{niz_x[i]},{niz_y[i]}\n')
-
-"""
 
 pygame.quit()
 quit()
