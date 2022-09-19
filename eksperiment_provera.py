@@ -39,7 +39,7 @@ window_width = 1400
 window_hieght =800
 
 ww = pygame.display.set_mode((window_width, window_hieght))
-pygame.display.set_caption('Gledaj u tacku koja se cveni')
+pygame.display.set_caption('Gledaj u tacku koja se crveni')
 #inicijalizacija kordinata tačaka koje gledamo i poluprečnika istih
 x = [0] * 9
 y = [0] * 9
@@ -53,7 +53,7 @@ y[3] = y[4] = y[5] = window_hieght//2
 y[6] = y[7] = y[8] = window_hieght - 100
 
 radius1 = 22
-radius2 = 66
+radius2 = 100
 
 kamera = 1
 cap = cv2.VideoCapture(kamera)

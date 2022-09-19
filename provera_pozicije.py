@@ -27,7 +27,7 @@ y_predvidjeno = np.zeros(m)
 x_poznato = np.zeros(m)
 y_poznato = np.zeros(m)
 #radius veceg kruga (sa ekrana, radi poredjenja)
-radiusV = 66
+radiusV = 100
 #brojac za odredjivaje preciznosti
 br = 0
 for i in range (m): 

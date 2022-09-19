@@ -47,7 +47,7 @@ def frame_work(frame):
         print('nan')
     else:
         print(circles[0][0][2])
-    return circles, bin, edges 
+    return circles, bin, edges  
 #dobijanje koordinata centra i radius
 def koordinate(circles, frame):
     center = (0, 0)
@@ -86,12 +86,10 @@ while cap.isOpened():
             center = (i[0], i[1])
             # circle center
             cv2.circle(rgb, center, 1, (255, 0, 0), 10)
-            cv2.circle(edges, center, 1, (255, 0, 0), 10)
 
             # circle outline
             radius = i[2]
             cv2.circle(rgb, center, radius, (255, 0, 0), 10)
-            cv2.circle(edges, center, radius, (255, 0, 0), 10)
     
     cv2.imshow('Siva', frame)
     cv2.imshow('RGB+circle', rgb)
