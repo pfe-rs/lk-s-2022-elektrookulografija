@@ -257,6 +257,5 @@ for i in range(len(xosa_filter)):
      fp.write(f'{xosa_filter[i]},{yosa_filter[i]},{niz_x[i]},{niz_y[i]}\n')
 
 
-
 pygame.quit()
 quit()

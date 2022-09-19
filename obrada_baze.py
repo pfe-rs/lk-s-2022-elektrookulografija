@@ -46,8 +46,16 @@ ax[2, 1].plot(x_screen, y_screen, 'o', color = 'red', markersize=1)
 ax[2, 1].plot(df['x_tacka'], df['y_tacka'], 'x')
 ax[2, 1].set_title('Polinomialna regresija')
 
-x_hist = [205, 720, 1224, 1180, 601, 139, 104, 539, 1157]
-y_hist = [705, 701, 624, 327, 450, 567, 233, 123, 91]
+x_hist = [104, 539, 1157, 1180, 601, 139, 205, 720, 1224]
+y_hist = [ 233, 123, 91, 327, 450, 567, 705, 701, 624]
+
+x_ekran = [100, 700, 1300, 1300, 700, 100, 100, 700, 1300]
+y_ekran = [100, 100, 100, 400, 400, 400, 700, 700, 700]
+
+pomeraj = []
+
+xy_kovarijanse = []
+
 cov_matrix = []
 for i in range(0, len(x_hist)):
     points = []
@@ -55,8 +63,14 @@ for i in range(0, len(x_hist)):
         if np.sqrt((x_hist[i] - x_screen[j])**2 + (y_hist[i] - y_screen[j])**2) <= 200:
             points.append([x_screen[j], y_screen[j]])
     
+    pomeraj.append(np.sqrt((x_hist[i] - x_ekran[i])**2 + (y_hist[i] - y_ekran[i])**2))
     points = np.array(points)
     cov_matrix.append(np.cov(points.T))
+    #xy_kovarijanse.append([np.sqrt(cov_matrix[i][0, 0]), np.sqrt(points[i][1, 1])])
+
+# print(pomeraj)
+# print(xy_kovarijanse)
+
 
 from numpy.linalg import det, inv
 dx = 7
@@ -88,9 +102,9 @@ plt.show()
 #jet = plt.get_cmap('jet')
 #surf = ax.plot_surface(X, Y, mat, rstride = 1, cstride = 1, cmap = jet, linewidth = 0)
 
-#plt.figure()
-#plt.hist2d(x_screen, y_screen, 100, cmap='gray')
-#plt.show()
+# plt.figure()
+# plt.hist2d(x_screen, y_screen, 100)
+# plt.show()
 
 
 
